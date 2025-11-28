@@ -2,15 +2,23 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    // Helper function to check if user is authenticated
-    function isAuthenticated() {
-      return request.auth != null;
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.admin == true;
     }
 
-    // Allow public read access to all images
+    // الصور: قراءة للجميع، رفع للـ Admin فقط
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() &&
+                     request.resource.size < 5 * 1024 * 1024 && // 5MB max
+                     request.resource.contentType.matches('image/.*');
+    }
+
+    // Default
     match /{allPaths=**} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isAdmin();
     }
   }
 }

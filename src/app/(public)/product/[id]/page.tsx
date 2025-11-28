@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import ProductDetails from './ProductDetails';
 import { getDataProvider } from '@/lib/data-providers';
 
@@ -6,6 +7,26 @@ interface ProductPageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const dataProvider = getDataProvider();
+  const product = await dataProvider.getProductById(id);
+
+  if (!product) {
+    return { title: 'المنتج غير موجود' };
+  }
+
+  return {
+    title: `${product.name_ar} | سوفت 99`,
+    description: product.short_description || product.description?.slice(0, 160),
+    openGraph: {
+      title: product.name_ar,
+      description: product.description?.slice(0, 200),
+      images: product.images?.[0] ? [product.images[0]] : [],
+    },
+  };
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
