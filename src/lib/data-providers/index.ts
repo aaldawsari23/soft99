@@ -8,7 +8,7 @@
 import { DataProvider, ProviderConfig } from './types';
 import { localProvider } from './localProvider';
 import { apiProvider } from './apiProvider.stub';
-import { firestoreProvider } from './firestoreProvider';
+// import { firestoreProvider } from './firestoreProvider'; // Loaded dynamically
 
 /**
  * المزود النشط حالياً
@@ -59,7 +59,8 @@ export function createProvider(config: ProviderConfig): DataProvider {
       return apiProvider;
 
     case 'firestore':
-      return firestoreProvider;
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      return require('./firestoreProvider').firestoreProvider;
 
     default:
       throw new Error(`Unknown provider source: ${config.source}`);
