@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import { Product } from '@/types';
 import { LazyProductImage } from '@/components/ui/LazyProductImage';
@@ -11,7 +12,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+function ProductCard({ product }: ProductCardProps) {
   const displayName = product.name_ar || product.name_en || 'منتج';
   const isAvailable = product.is_available ?? true;
   const { addToCart, isInCart } = useCart();
@@ -114,3 +115,5 @@ export default function ProductCard({ product }: ProductCardProps) {
     </Link>
   );
 }
+
+export default memo(ProductCard);

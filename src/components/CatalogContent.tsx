@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import ProductGrid from '@/components/products/ProductGrid';
 import { Product, Category, Brand } from '@/types';
@@ -11,7 +11,7 @@ import { filterProducts, sortProducts, searchProducts, paginateProducts } from '
 const ITEMS_PER_PAGE = 20;
 
 export default function CatalogContent() {
-  const dataProvider = getDataProvider();
+  const dataProviderRef = useRef(getDataProvider());
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -41,9 +41,9 @@ export default function CatalogContent() {
       try {
         setIsLoading(true);
         const [productsData, categoriesData, brandsData] = await Promise.all([
-          dataProvider.getProducts({ status: 'published' }),
-          dataProvider.getCategories(),
-          dataProvider.getBrands(),
+          dataProviderRef.current.getProducts({ status: 'published' }),
+          dataProviderRef.current.getCategories(),
+          dataProviderRef.current.getBrands(),
         ]);
         setProducts(productsData);
         setCategories(categoriesData);
@@ -257,8 +257,8 @@ export default function CatalogContent() {
               <button
                 onClick={() => setSelectedCategory('all')}
                 className={`px-3 py-1.5 text-xs md:text-sm rounded-full transition-all duration-200 ${selectedCategory === 'all'
-                    ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                    : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
+                  ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                  : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
                   }`}
               >
                 الكل
@@ -268,8 +268,8 @@ export default function CatalogContent() {
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`px-3 py-1.5 text-xs md:text-sm rounded-full transition-all duration-200 ${selectedCategory === cat.id
-                      ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                      : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                    : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
                     }`}
                 >
                   {cat.name_ar}
@@ -289,8 +289,8 @@ export default function CatalogContent() {
               <button
                 onClick={() => setSelectedBrand('all')}
                 className={`px-3 py-1.5 text-xs md:text-sm rounded-full transition-all duration-200 ${selectedBrand === 'all'
-                    ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                    : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
+                  ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                  : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
                   }`}
               >
                 الكل
@@ -300,8 +300,8 @@ export default function CatalogContent() {
                   key={brand.id}
                   onClick={() => setSelectedBrand(brand.id)}
                   className={`px-3 py-1.5 text-xs md:text-sm rounded-full transition-all duration-200 ${selectedBrand === brand.id
-                      ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                      : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                    : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
                     }`}
                 >
                   {brand.name}
@@ -345,8 +345,8 @@ export default function CatalogContent() {
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${currentPage === 1
-                  ? 'bg-background/30 text-text-muted cursor-not-allowed opacity-50'
-                  : 'bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:shadow-lg hover:shadow-primary/20 active:scale-95'
+                ? 'bg-background/30 text-text-muted cursor-not-allowed opacity-50'
+                : 'bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:shadow-lg hover:shadow-primary/20 active:scale-95'
                 }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -371,8 +371,8 @@ export default function CatalogContent() {
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${currentPage === totalPages
-                  ? 'bg-background/30 text-text-muted cursor-not-allowed opacity-50'
-                  : 'bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:shadow-lg hover:shadow-primary/20 active:scale-95'
+                ? 'bg-background/30 text-text-muted cursor-not-allowed opacity-50'
+                : 'bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:shadow-lg hover:shadow-primary/20 active:scale-95'
                 }`}
             >
               <span className="text-sm font-semibold">التالي</span>
@@ -390,8 +390,8 @@ export default function CatalogContent() {
                   key={page}
                   onClick={() => setCurrentPage(page)}
                   className={`w-10 h-10 rounded-lg transition-all duration-200 ${currentPage === page
-                      ? 'bg-primary text-white shadow-lg shadow-primary/30 scale-110'
-                      : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/30 scale-110'
+                    : 'bg-background/50 text-text-muted border border-white/10 hover:border-primary/30 hover:text-white active:scale-95'
                     }`}
                 >
                   {page}

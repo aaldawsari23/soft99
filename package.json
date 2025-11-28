@@ -16,6 +16,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.11",
     "clsx": "^2.1.1",
     "firebase": "^12.6.0",
     "next": "^15.0.0",

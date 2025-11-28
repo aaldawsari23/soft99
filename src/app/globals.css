@@ -75,6 +75,16 @@
     letter-spacing: 0.02em;
     font-weight: 450;
   }
+
+  /* Focus visible for keyboard users only */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary ring-2 ring-primary/20;
+  }
+  
+  /* Remove default focus for mouse users */
+  :focus:not(:focus-visible) {
+    @apply outline-none;
+  }
 }
 
 @layer components {

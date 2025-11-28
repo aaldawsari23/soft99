@@ -228,6 +228,7 @@ export function handleZodError(error: unknown): ValidationError {
 /**
  * Async error wrapper - لف الدوال غير المتزامنة بمعالج أخطاء
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function asyncErrorWrapper<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   context?: string

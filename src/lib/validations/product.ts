@@ -6,18 +6,18 @@ import { z } from 'zod';
  */
 
 // Product Type enum
-export const productTypeSchema = z.enum(['bike', 'part', 'gear'], {
-  errorMap: () => ({ message: 'نوع المنتج يجب أن يكون: دراجة، قطعة غيار، أو معدات' }),
+export const productTypeSchema = z.enum(['bike', 'part', 'gear'] as const, {
+  message: 'نوع المنتج يجب أن يكون: دراجة، قطعة غيار، أو معدات',
 });
 
 // Stock Status enum
-export const stockStatusSchema = z.enum(['available', 'unavailable'], {
-  errorMap: () => ({ message: 'حالة المخزون يجب أن تكون: متوفر أو غير متوفر' }),
+export const stockStatusSchema = z.enum(['available', 'unavailable'] as const, {
+  message: 'حالة المخزون يجب أن تكون: متوفر أو غير متوفر',
 });
 
 // Product Status enum
-export const productStatusSchema = z.enum(['published', 'hidden'], {
-  errorMap: () => ({ message: 'حالة المنتج يجب أن تكون: منشور أو مخفي' }),
+export const productStatusSchema = z.enum(['published', 'hidden'] as const, {
+  message: 'حالة المنتج يجب أن تكون: منشور أو مخفي',
 });
 
 /**
@@ -44,7 +44,7 @@ export const createProductSchema = z.object({
   stock_status: stockStatusSchema.optional().default('available'),
   stock_quantity: z.number().int().min(0, 'الكمية يجب أن تكون صفر أو أكثر').optional(),
   status: productStatusSchema.optional().default('published'),
-  specifications: z.record(z.string()).optional(),
+  specifications: z.record(z.string(), z.string()).optional(),
   description: z
     .string()
     .min(10, 'الوصف يجب أن يكون 10 أحرف على الأقل')

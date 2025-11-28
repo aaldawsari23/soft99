@@ -55,6 +55,9 @@ const cairo = Cairo({
   variable: "--font-cairo",
 });
 
+import QueryProvider from "@/providers/QueryProvider";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -70,7 +73,10 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
       <body className={`${cairo.variable} font-sans antialiased`}>
-        {children}
+        <QueryProvider>
+          <ServiceWorkerRegister />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

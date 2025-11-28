@@ -2,19 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { getDashboardStats } from '@/lib/db-admin';
 import { Product } from '@/types';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell
-} from 'recharts';
-import DataMigration from '@/components/admin/DataMigration';
+
+const DataMigration = dynamic(() => import('@/components/admin/DataMigration'), {
+  loading: () => <div className="p-4 text-center">جاري تحميل أداة النقل...</div>
+});
+
+const DashboardChart = dynamic(() => import('@/components/admin/DashboardChart'), {
+  loading: () => <div className="h-[300px] w-full flex items-center justify-center bg-white/5 rounded-xl">جاري تحميل الرسم البياني...</div>,
+  ssr: false
+});
 
 interface DashboardStats {
   totalProducts: number;
@@ -116,25 +115,7 @@ export default function AdminDashboard() {
         {/* Charts */}
         <div className="lg:col-span-2 card p-6">
           <h2 className="text-xl font-bold text-white mb-6">حالة المنتجات</h2>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={productStatusData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
-                <XAxis dataKey="name" stroke="#9ca3af" tickLine={false} axisLine={false} />
-                <YAxis stroke="#9ca3af" tickLine={false} axisLine={false} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff', borderRadius: '8px' }}
-                  itemStyle={{ color: '#fff' }}
-                  cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                />
-                <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={40}>
-                  {productStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          <DashboardChart data={productStatusData} />
         </div>
 
         {/* Quick Actions & Recent */}

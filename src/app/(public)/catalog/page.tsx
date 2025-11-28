@@ -1,5 +1,16 @@
 import { Suspense } from 'react';
+import { Metadata } from 'next';
 import CatalogContent from '@/components/CatalogContent';
+
+export const metadata: Metadata = {
+  title: 'جميع المنتجات | سوفت 99 - قطع غيار الدراجات النارية',
+  description: 'تصفح مجموعتنا الكاملة من قطع غيار وزيوت الدراجات النارية. زيوت موتول، فلاتر، بطاريات وإكسسوارات.',
+  openGraph: {
+    title: 'جميع المنتجات | سوفت 99',
+    description: 'تصفح مجموعتنا الكاملة من قطع غيار الدراجات النارية',
+    type: 'website',
+  },
+};
 
 export default function CatalogPage() {
   return (
