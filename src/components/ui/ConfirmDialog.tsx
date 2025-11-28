@@ -1,95 +1,57 @@
 'use client';
 
-import { useState } from 'react';
-
 interface ConfirmDialogProps {
-    isOpen: boolean;
-    title: string;
-    message: string;
-    confirmText?: string;
-    cancelText?: string;
-    onConfirm: () => void;
-    onCancel: () => void;
-    variant?: 'danger' | 'warning' | 'info';
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  confirmVariant?: 'primary' | 'danger';
+  isLoading?: boolean;
 }
 
-export function ConfirmDialog({
-    isOpen,
-    title,
-    message,
-    confirmText = 'تأكيد',
-    cancelText = 'إلغاء',
-    onConfirm,
-    onCancel,
-    variant = 'danger'
+export default function ConfirmDialog({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  message,
+  confirmText = 'تأكيد',
+  cancelText = 'إلغاء',
+  confirmVariant = 'primary',
+  isLoading = false,
 }: ConfirmDialogProps) {
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    const variantStyles = {
-        danger: 'bg-red-500 hover:bg-red-600',
-        warning: 'bg-yellow-500 hover:bg-yellow-600',
-        info: 'bg-blue-500 hover:bg-blue-600',
-    };
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                onClick={onCancel}
-            />
-            <div className="relative bg-background-card border border-border rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-                <p className="text-text-secondary mb-6">{message}</p>
-                <div className="flex gap-3 justify-end">
-                    <button
-                        onClick={onCancel}
-                        className="px-4 py-2 rounded-lg border border-border text-text-secondary hover:text-white hover:border-white/30 transition-colors"
-                    >
-                        {cancelText}
-                    </button>
-                    <button
-                        onClick={onConfirm}
-                        className={`px-4 py-2 rounded-lg text-white transition-colors ${variantStyles[variant]}`}
-                    >
-                        {confirmText}
-                    </button>
-                </div>
-            </div>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="relative bg-neutral-900 rounded-2xl border border-white/10 p-6 max-w-sm w-full">
+        <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+        <p className="text-neutral-400 mb-6">{message}</p>
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            disabled={isLoading}
+            className="flex-1 px-4 py-2.5 bg-neutral-800 text-white rounded-xl border border-white/10 hover:bg-neutral-700 disabled:opacity-50 transition-colors"
+          >
+            {cancelText}
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isLoading}
+            className={`flex-1 px-4 py-2.5 rounded-xl disabled:opacity-50 transition-colors ${
+              confirmVariant === 'danger'
+                ? 'bg-red-600 text-white hover:bg-red-700'
+                : 'bg-red-600 text-white hover:bg-red-700'
+            }`}
+          >
+            {isLoading ? 'جاري...' : confirmText}
+          </button>
         </div>
-    );
-}
-
-// Hook للاستخدام السهل
-export function useConfirmDialog() {
-    const [state, setState] = useState<{
-        isOpen: boolean;
-        title: string;
-        message: string;
-        onConfirm: () => void;
-    }>({
-        isOpen: false,
-        title: '',
-        message: '',
-        onConfirm: () => { },
-    });
-
-    const confirm = (title: string, message: string): Promise<boolean> => {
-        return new Promise((resolve) => {
-            setState({
-                isOpen: true,
-                title,
-                message,
-                onConfirm: () => {
-                    setState(s => ({ ...s, isOpen: false }));
-                    resolve(true);
-                },
-            });
-        });
-    };
-
-    const cancel = () => {
-        setState(s => ({ ...s, isOpen: false }));
-    };
-
-    return { state, confirm, cancel };
+      </div>
+    </div>
+  );
 }
