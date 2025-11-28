@@ -7,10 +7,52 @@ service firebase.storage {
       return request.auth != null;
     }
 
-    // Allow public read access to all images
-    match /{allPaths=**} {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.admin == true;
+    }
+
+    // Products images: Public read, Admin only write
+    match /products/{allPaths=**} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Brands logos: Public read, Admin only write
+    match /brands/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Categories images: Public read, Admin only write
+    match /categories/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Temporary uploads: Authenticated users can upload
+    match /temp/{userId}/{allPaths=**} {
+      allow read, write: if isAuthenticated() &&
+                           request.auth.uid == userId;
+    }
+
+    // User avatars (للمستقبل)
+    match /users/{userId}/avatar/{fileName} {
+      allow read: if true;
+      allow write: if isAuthenticated() &&
+                     request.auth.uid == userId;
+    }
+
+    // Public folder: Read all, Admin write
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Default deny for all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }
