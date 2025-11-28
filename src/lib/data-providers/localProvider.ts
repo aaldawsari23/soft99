@@ -5,7 +5,7 @@
  * يمكن استبداله بمزود API لاحقاً دون تغيير المكونات
  */
 
-import { Product, Category, Brand, ProductFilters } from '@/types';
+import { Product, Category, Brand, ProductFilters, Order } from '@/types';
 import { DataProvider } from './types';
 import { filterProducts } from '@/utils/catalog';
 
@@ -18,6 +18,7 @@ const STORAGE_KEYS = {
   PRODUCTS: 'soft99_products',
   CATEGORIES: 'soft99_categories',
   BRANDS: 'soft99_brands',
+  ORDERS: 'soft99_orders',
 } as const;
 
 /**
@@ -28,10 +29,12 @@ class LocalDataProvider implements DataProvider {
     products: Product[] | null;
     categories: Category[] | null;
     brands: Brand[] | null;
+    orders: Order[] | null;
   } = {
       products: null,
       categories: null,
       brands: null,
+      orders: null,
     };
 
   /**
@@ -364,6 +367,78 @@ class LocalDataProvider implements DataProvider {
   }
 
   /**
+   * الحصول على الطلبات
+   */
+  async getOrders(userId?: string): Promise<Order[]> {
+    if (!this.cache.orders) {
+      this.cache.orders = this.loadFromStorage(STORAGE_KEYS.ORDERS, []);
+    }
+
+    let orders = [...this.cache.orders];
+    if (userId) {
+      orders = orders.filter(o => o.user_id === userId);
+    }
+    return orders;
+  }
+
+  /**
+   * الحصول على طلب بالمعرف
+   */
+  async getOrderById(id: string): Promise<Order | null> {
+    const orders = await this.getOrders();
+    return orders.find(o => o.id === id) || null;
+  }
+
+  /**
+   * إنشاء طلب جديد
+   */
+  async createOrder(orderData: Omit<Order, 'id' | 'created_at' | 'updated_at'>): Promise<Order> {
+    const orders = await this.getOrders();
+
+    const newOrder: Order = {
+      ...orderData,
+      id: `ord_${Date.now()}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      status: 'pending'
+    };
+
+    this.cache.orders = [...orders, newOrder];
+    this.saveToStorage(STORAGE_KEYS.ORDERS, this.cache.orders);
+
+    return newOrder;
+  }
+
+  /**
+   * تحديث طلب
+   */
+  async updateOrder(id: string, updates: Partial<Order>): Promise<Order> {
+    const orders = await this.getOrders();
+    const index = orders.findIndex(o => o.id === id);
+
+    if (index === -1) {
+      throw new Error(`Order with id ${id} not found`);
+    }
+
+    const updatedOrder: Order = {
+      ...orders[index],
+      ...updates,
+      id,
+      updated_at: new Date().toISOString(),
+    };
+
+    this.cache.orders = [
+      ...orders.slice(0, index),
+      updatedOrder,
+      ...orders.slice(index + 1),
+    ];
+
+    this.saveToStorage(STORAGE_KEYS.ORDERS, this.cache.orders);
+
+    return updatedOrder;
+  }
+
+  /**
    * مسح الكاش
    */
   clearCache(): void {
@@ -371,6 +446,7 @@ class LocalDataProvider implements DataProvider {
       products: null,
       categories: null,
       brands: null,
+      orders: null,
     };
   }
 

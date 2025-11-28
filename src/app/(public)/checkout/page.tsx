@@ -33,7 +33,11 @@ export default function CheckoutPage() {
                 </div>
                 <div className="lg:col-span-1">
                     <OrderSummary />
-                    <button className="btn-primary w-full mt-4 text-lg">
+                    <button
+                        form="checkout-form"
+                        type="submit"
+                        className="btn-primary w-full mt-4 text-lg"
+                    >
                         تأكيد الطلب
                     </button>
                 </div>

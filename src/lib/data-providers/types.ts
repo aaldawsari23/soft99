@@ -5,7 +5,7 @@
  * يمكن استبدال المزود المحلي بمزود API لاحقاً بسهولة
  */
 
-import { Product, Category, Brand, ProductFilters, SortOption } from '@/types';
+import { Product, Category, Brand, ProductFilters, SortOption, Order } from '@/types';
 
 /**
  * واجهة مزود البيانات الأساسية
@@ -31,6 +31,12 @@ export interface DataProvider {
   createBrand(brand: Omit<Brand, 'id' | 'created_at'>): Promise<Brand>;
   updateBrand(id: string, brand: Partial<Brand>): Promise<Brand>;
   deleteBrand(id: string): Promise<boolean>;
+
+  // الطلبات
+  getOrders(userId?: string): Promise<Order[]>;
+  getOrderById(id: string): Promise<Order | null>;
+  createOrder(order: Omit<Order, 'id' | 'created_at' | 'updated_at'>): Promise<Order>;
+  updateOrder(id: string, order: Partial<Order>): Promise<Order>;
 }
 
 /**

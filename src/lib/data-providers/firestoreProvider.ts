@@ -12,11 +12,12 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { DataProvider } from './types';
-import { Product, Category, Brand, ProductFilters } from '@/types';
+import { Product, Category, Brand, ProductFilters, Order } from '@/types';
 
 const PRODUCTS_COL = 'products';
 const CATEGORIES_COL = 'categories';
 const BRANDS_COL = 'brands';
+const ORDERS_COL = 'orders';
 
 export const firestoreProvider: DataProvider = {
     // --- Products ---
@@ -267,6 +268,69 @@ export const firestoreProvider: DataProvider = {
         } catch (error) {
             console.error(`خطأ في حذف العلامة التجارية ${id}:`, error);
             throw new Error('فشل في حذف العلامة التجارية. يرجى المحاولة مرة أخرى.');
+        }
+    },
+
+    // --- Orders ---
+    async getOrders(userId?: string): Promise<Order[]> {
+        try {
+            let q;
+            if (userId) {
+                q = query(collection(db, ORDERS_COL), where('user_id', '==', userId));
+            } else {
+                q = collection(db, ORDERS_COL);
+            }
+            const snapshot = await getDocs(q);
+            return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
+        } catch (error) {
+            console.error('خطأ في جلب الطلبات:', error);
+            throw new Error('فشل في تحميل الطلبات. يرجى المحاولة مرة أخرى.');
+        }
+    },
+
+    async getOrderById(id: string): Promise<Order | null> {
+        try {
+            const docRef = doc(db, ORDERS_COL, id);
+            const docSnap = await getDoc(docRef);
+            return docSnap.exists() ? ({ id: docSnap.id, ...docSnap.data() } as Order) : null;
+        } catch (error) {
+            console.error(`خطأ في جلب الطلب ${id}:`, error);
+            throw new Error('فشل في تحميل تفاصيل الطلب. يرجى المحاولة مرة أخرى.');
+        }
+    },
+
+    async createOrder(order): Promise<Order> {
+        try {
+            const now = new Date().toISOString();
+            const docRef = await addDoc(collection(db, ORDERS_COL), {
+                ...order,
+                created_at: now,
+                updated_at: now,
+                status: 'pending'
+            });
+            return { id: docRef.id, ...order, created_at: now, updated_at: now, status: 'pending' } as Order;
+        } catch (error) {
+            console.error('خطأ في إنشاء الطلب:', error);
+            throw new Error('فشل في إنشاء الطلب. يرجى المحاولة مرة أخرى.');
+        }
+    },
+
+    async updateOrder(id: string, order): Promise<Order> {
+        try {
+            const docRef = doc(db, ORDERS_COL, id);
+            const updates = {
+                ...order,
+                updated_at: new Date().toISOString()
+            };
+            await updateDoc(docRef, updates);
+            const updatedSnap = await getDoc(docRef);
+            if (!updatedSnap.exists()) {
+                throw new Error('الطلب غير موجود بعد التحديث');
+            }
+            return { id: updatedSnap.id, ...updatedSnap.data() } as Order;
+        } catch (error) {
+            console.error(`خطأ في تحديث الطلب ${id}:`, error);
+            throw new Error('فشل في تحديث الطلب. يرجى المحاولة مرة أخرى.');
         }
     }
 };

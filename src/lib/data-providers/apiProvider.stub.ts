@@ -4,73 +4,80 @@
  * مزود البيانات عبر API - للاستخدام المستقبلي
  * حالياً غير مفعّل - المشروع يستخدم Firestore مباشرة
  * Ready for future backend integration
+/**
+ * API Provider (Placeholder)
+ * 
+ * مزود البيانات عبر API - للاستخدام المستقبلي
+ * حالياً غير مفعّل - المشروع يستخدم Firestore مباشرة
+ * Ready for future backend integration
  */
 
 import { DataProvider } from './types';
-import { Product, Category, Brand, ProductFilters } from '@/types';
-
-function notImplemented(method: string): never {
-  throw new Error(`API provider method "${method}" is not yet implemented. Please use firestoreProvider or localProvider instead.`);
-}
+import { Product, Category, Brand, ProductFilters, Order } from '@/types';
 
 export const apiProvider: DataProvider = {
+  // --- Products ---
   async getProducts(_filters?: ProductFilters): Promise<Product[]> {
-    return notImplemented('getProducts');
+    throw new Error('API Provider not implemented');
   },
-
   async getProductById(_id: string): Promise<Product | null> {
-    return notImplemented('getProductById');
+    throw new Error('API Provider not implemented');
   },
-
-  async createProduct(_product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product> {
-    return notImplemented('createProduct');
+  async createProduct(_product): Promise<Product> {
+    throw new Error('API Provider not implemented');
   },
-
-  async updateProduct(_id: string, _updates: Partial<Product>): Promise<Product> {
-    return notImplemented('updateProduct');
+  async updateProduct(_id: string, _product): Promise<Product> {
+    throw new Error('API Provider not implemented');
   },
-
   async deleteProduct(_id: string): Promise<boolean> {
-    return notImplemented('deleteProduct');
+    throw new Error('API Provider not implemented');
   },
 
+  // --- Categories ---
   async getCategories(): Promise<Category[]> {
-    return notImplemented('getCategories');
+    throw new Error('API Provider not implemented');
   },
-
   async getCategoryById(_id: string): Promise<Category | null> {
-    return notImplemented('getCategoryById');
+    throw new Error('API Provider not implemented');
   },
-
-  async createCategory(_category: Omit<Category, 'id' | 'created_at'>): Promise<Category> {
-    return notImplemented('createCategory');
+  async createCategory(_category): Promise<Category> {
+    throw new Error('API Provider not implemented');
   },
-
-  async updateCategory(_id: string, _updates: Partial<Category>): Promise<Category> {
-    return notImplemented('updateCategory');
+  async updateCategory(_id: string, _category): Promise<Category> {
+    throw new Error('API Provider not implemented');
   },
-
   async deleteCategory(_id: string): Promise<boolean> {
-    return notImplemented('deleteCategory');
+    throw new Error('API Provider not implemented');
   },
 
+  // --- Brands ---
   async getBrands(): Promise<Brand[]> {
-    return notImplemented('getBrands');
+    throw new Error('API Provider not implemented');
   },
-
   async getBrandById(_id: string): Promise<Brand | null> {
-    return notImplemented('getBrandById');
+    throw new Error('API Provider not implemented');
   },
-
-  async createBrand(_brand: Omit<Brand, 'id' | 'created_at'>): Promise<Brand> {
-    return notImplemented('createBrand');
+  async createBrand(_brand): Promise<Brand> {
+    throw new Error('API Provider not implemented');
   },
-
-  async updateBrand(_id: string, _updates: Partial<Brand>): Promise<Brand> {
-    return notImplemented('updateBrand');
+  async updateBrand(_id: string, _brand): Promise<Brand> {
+    throw new Error('API Provider not implemented');
   },
-
   async deleteBrand(_id: string): Promise<boolean> {
-    return notImplemented('deleteBrand');
+    throw new Error('API Provider not implemented');
   },
+
+  // --- Orders ---
+  async getOrders(_userId?: string): Promise<Order[]> {
+    throw new Error('API Provider not implemented');
+  },
+  async getOrderById(_id: string): Promise<Order | null> {
+    throw new Error('API Provider not implemented');
+  },
+  async createOrder(_order): Promise<Order> {
+    throw new Error('API Provider not implemented');
+  },
+  async updateOrder(_id: string, _order): Promise<Order> {
+    throw new Error('API Provider not implemented');
+  }
 };
