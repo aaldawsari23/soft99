@@ -1,5 +1,6 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import BottomNav from '@/components/layout/BottomNav';
 import { CartProvider } from '@/contexts/CartContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import ToastContainer from '@/components/ui/Toast';
@@ -22,8 +23,9 @@ export default function PublicLayout({
               تخطي إلى المحتوى الرئيسي
             </a>
             <Navbar />
-            <main id="main-content" className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1 pb-16 md:pb-0">{children}</main>
             <Footer />
+            <BottomNav />
           </div>
           <ToastContainer />
         </ToastProvider>
