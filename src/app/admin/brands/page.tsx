@@ -51,7 +51,7 @@ export default function AdminBrandsPage() {
         setBrands(prev => prev.map(b => b.id === editingBrand.id ? { ...b, ...formData } : b));
         showToast('تم تحديث الماركة بنجاح', 'success');
       } else {
-        const newBrand = await provider.createBrand(formData as any);
+        const newBrand = await provider.createBrand(formData as unknown as Omit<Brand, 'id' | 'created_at'>);
         setBrands(prev => [...prev, newBrand]);
         showToast('تم إضافة الماركة بنجاح', 'success');
       }
