@@ -23,43 +23,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// المستخدم الافتراضي للتطوير
-// TODO: استبدل بـ Auth حقيقي من Supabase
-const DEMO_ADMIN: User = {
-  id: 'admin-1',
-  email: 'admin@soft99bikes.com',
-  name: 'مدير المتجر',
-  role: 'admin',
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-};
 
-// بيانات تسجيل الدخول المؤقتة
-// TODO: استبدل بـ Auth حقيقي
-const DEMO_CREDENTIALS = {
-  email: 'admin@soft99bikes.com',
-  password: 'admin123', // في الإنتاج، لا تخزن كلمات المرور في الكود!
-};
-
-const AUTH_STORAGE_KEY = 'soft99_admin_auth';
-const AUTH_COOKIE_KEY = 'soft99_admin_token';
-
-function setAuthCookie(value: string, maxAgeDays: number = 7) {
-  const maxAgeSeconds = maxAgeDays * 24 * 60 * 60;
-  document.cookie = `${AUTH_COOKIE_KEY}=${value}; path=/; max-age=${maxAgeSeconds}; samesite=lax`;
-}
-
-function clearAuthCookie() {
-  document.cookie = `${AUTH_COOKIE_KEY}=; path=/; max-age=0; samesite=lax`;
-}
-
-function getAuthCookie(): string | null {
-  if (typeof document === 'undefined') return null;
-  const cookieString = document.cookie || '';
-  const cookies = cookieString.split(';').map((c) => c.trim());
-  const tokenCookie = cookies.find((cookie) => cookie.startsWith(`${AUTH_COOKIE_KEY}=`));
-  return tokenCookie ? tokenCookie.split('=')[1] : null;
-}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

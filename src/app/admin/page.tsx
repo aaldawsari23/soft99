@@ -177,8 +177,8 @@ export default function AdminDashboard() {
                                         </div>
                                     </div>
                                     <div className={`px-2 py-1 rounded-full text-xs ${product.status === 'published'
-                                            ? 'bg-green-500/10 text-green-500'
-                                            : 'bg-yellow-500/10 text-yellow-500'
+                                        ? 'bg-green-500/10 text-green-500'
+                                        : 'bg-yellow-500/10 text-yellow-500'
                                         }`}>
                                         {product.status === 'published' ? 'منشور' : 'مسودة'}
                                     </div>
@@ -222,7 +222,7 @@ function StatCard({
                 <span className="text-2xl">{icon}</span>
                 {href && (
                     <svg className="w-4 h-4 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" stroke Width={2} d="M9 5l7 7-7 7" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                 )}
             </div>

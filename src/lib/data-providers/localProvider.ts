@@ -80,14 +80,14 @@ class LocalDataProvider implements DataProvider {
     // تنظيف specifications - إزالة undefined
     if (cleaned.specifications) {
       cleaned.specifications = Object.fromEntries(
-        Object.entries(cleaned.specifications).filter(([_, v]) => v !== undefined)
+        Object.entries(cleaned.specifications).filter(([, v]) => v !== undefined)
       );
     }
 
     // تنظيف specs - إزالة undefined
     if (cleaned.specs) {
       cleaned.specs = Object.fromEntries(
-        Object.entries(cleaned.specs).filter(([_, v]) => v !== undefined)
+        Object.entries(cleaned.specs).filter(([, v]) => v !== undefined)
       );
     }
 

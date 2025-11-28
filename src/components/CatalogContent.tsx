@@ -22,7 +22,6 @@ export default function CatalogContent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   // Filters from URL
   const categoryParam = searchParams.get('category') || 'all';
@@ -67,7 +66,7 @@ export default function CatalogContent() {
 
   // Filter & Sort
   const filteredProducts = useMemo(() => {
-    let result = filterProducts(products, {
+    const result = filterProducts(products, {
       category: categoryParam !== 'all' ? categoryParam : undefined,
       brand: brandParam !== 'all' ? brandParam : undefined,
       status: 'published',
@@ -120,29 +119,28 @@ export default function CatalogContent() {
         </div>
       </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
+      {/* Filters */}
+      <div className="flex flex-wrap gap-2">
+        <FilterDropdown
+          label="الفئة"
+          options={categoryOptions}
+          value={categoryParam}
+          onChange={(v) => updateFilters('category', v)}
+        />
+        {brandOptions.length > 1 && (
           <FilterDropdown
-            label="الفئة"
-            options={categoryOptions}
-            value={categoryParam}
-            onChange={(v) => updateFilters('category', v)}
+            label="الماركة"
+            options={brandOptions}
+            value={brandParam}
+            onChange={(v) => updateFilters('brand', v)}
           />
-          {brandOptions.length > 1 && (
-            <FilterDropdown
-              label="الماركة"
-              options={brandOptions}
-              value={brandParam}
-              onChange={(v) => updateFilters('brand', v)}
-            />
-          )}
-          <FilterDropdown
-            label="الترتيب"
-            options={sortOptions}
-            value={sortParam}
-            onChange={(v) => updateFilters('sort', v)}
-          />
-        </div>
+        )}
+        <FilterDropdown
+          label="الترتيب"
+          options={sortOptions}
+          value={sortParam}
+          onChange={(v) => updateFilters('sort', v)}
+        />
       </div>
 
       {/* Active Filters */}
@@ -261,11 +259,10 @@ function Pagination({
             <button
               key={page}
               onClick={() => onPageChange(page)}
-              className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
-                page === currentPage
+              className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${page === currentPage
                   ? 'bg-red-600 text-white'
                   : 'bg-neutral-900 border border-white/10 text-neutral-400 hover:text-white hover:bg-neutral-800'
-              }`}
+                }`}
             >
               {page}
             </button>

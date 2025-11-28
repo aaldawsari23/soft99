@@ -5,7 +5,7 @@
  * يمكن استبدال المزود المحلي بمزود API لاحقاً بسهولة
  */
 
-import { Product, Category, Brand, ProductFilters, SortOption, Order } from '@/types';
+import { Product, Category, Brand, ProductFilters, Order } from '@/types';
 
 /**
  * واجهة مزود البيانات الأساسية

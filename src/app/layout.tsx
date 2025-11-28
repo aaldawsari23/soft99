@@ -57,6 +57,7 @@ const cairo = Cairo({
 
 import QueryProvider from "@/providers/QueryProvider";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 export default function RootLayout({
   children,
@@ -74,8 +75,10 @@ export default function RootLayout({
       </head>
       <body className={`${cairo.variable} font-sans antialiased`}>
         <QueryProvider>
-          <ServiceWorkerRegister />
-          {children}
+          <ToastProvider>
+            <ServiceWorkerRegister />
+            {children}
+          </ToastProvider>
         </QueryProvider>
       </body>
     </html>

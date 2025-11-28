@@ -6,7 +6,7 @@ import { STORE } from '@/data/config';
 
 const navItems = [
   {
-    label: ''D1&J3J)',
+    label: 'الرئيسية',
     href: '/admin',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,7 +15,7 @@ const navItems = [
     ),
   },
   {
-    label: ''DEF*,'*',
+    label: 'المنتجات',
     href: '/admin/products',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,7 +24,7 @@ const navItems = [
     ),
   },
   {
-    label: ''DA&'*',
+    label: 'الفئات',
     href: '/admin/categories',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@ const navItems = [
     ),
   },
   {
-    label: ''DE'1C'*',
+    label: 'الماركات',
     href: '/admin/brands',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@ export default function AdminSidebar() {
           </div>
           <div>
             <h1 className="text-white font-bold text-lg">{STORE.name}</h1>
-            <p className="text-neutral-500 text-xs">DH-) 'D*-CE</p>
+            <p className="text-neutral-500 text-xs">لوحة التحكم</p>
           </div>
         </Link>
       </div>
@@ -70,11 +70,10 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                isActive
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
                   ? 'bg-red-500 text-white'
                   : 'text-neutral-400 hover:text-white hover:bg-white/5'
-              }`}
+                }`}
             >
               {item.icon}
               <span className="font-medium">{item.label}</span>
@@ -92,7 +91,7 @@ export default function AdminSidebar() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
-          <span className="font-medium">'DEHB9 'D1&J3J</span>
+          <span className="font-medium">الموقع الرئيسي</span>
         </Link>
       </div>
     </aside>
