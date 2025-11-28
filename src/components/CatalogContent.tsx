@@ -22,6 +22,7 @@ export default function CatalogContent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Filters from URL
   const categoryParam = searchParams.get('category') || 'all';
@@ -117,6 +118,7 @@ export default function CatalogContent() {
             {filteredProducts.length} منتج
           </p>
         </div>
+      </div>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2">
