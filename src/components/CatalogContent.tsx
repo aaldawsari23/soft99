@@ -1,17 +1,18 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import ProductGrid from '@/components/products/ProductGrid';
 import { Product, Category, Brand } from '@/types';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { getDataProvider } from '@/lib/data-providers';
-import { filterProducts, sortProducts, searchProducts, paginateProducts } from '@/utils/catalog';
+import { filterProducts, sortProducts } from '@/utils/catalog';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 const ITEMS_PER_PAGE = 20;
 
 export default function CatalogContent() {
-  const dataProvider = getDataProvider();
+  const dataProviderRef = useRef(getDataProvider());
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -40,10 +41,11 @@ export default function CatalogContent() {
     async function loadData() {
       try {
         setIsLoading(true);
+        const provider = dataProviderRef.current;
         const [productsData, categoriesData, brandsData] = await Promise.all([
-          dataProvider.getProducts({ status: 'published' }),
-          dataProvider.getCategories(),
-          dataProvider.getBrands(),
+          provider.getProducts({ status: 'published' }),
+          provider.getCategories(),
+          provider.getBrands(),
         ]);
         setProducts(productsData);
         setCategories(categoriesData);
@@ -95,11 +97,14 @@ export default function CatalogContent() {
     // Apply price range filter
     filtered = filtered.filter(p => p.price >= priceRange.min && p.price <= priceRange.max);
 
-    // Apply sorting
-    filtered = sortProducts(filtered, sortBy);
-
     return filtered;
-  }, [products, selectedCategory, selectedBrand, searchQuery, priceRange, sortBy, isLoading]);
+  }, [products, selectedCategory, selectedBrand, searchQuery, priceRange, isLoading]);
+
+  const sortedProducts = useMemo(() => {
+    if (filteredProducts.length === 0) return [];
+
+    return sortProducts(filteredProducts, sortBy);
+  }, [filteredProducts, sortBy]);
 
   // Reset to page 1 when filters change
   useEffect(() => {
@@ -153,11 +158,11 @@ export default function CatalogContent() {
   // Paginate the filtered products
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredProducts, currentPage]);
+    return sortedProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [sortedProducts, currentPage]);
 
   // Calculate total pages
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(sortedProducts.length / ITEMS_PER_PAGE);
 
   // Show loading state
   if (isLoading) {
@@ -314,7 +319,7 @@ export default function CatalogContent() {
         {/* Results Count */}
         <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
           <p className="text-xs md:text-sm text-text-muted">
-            <span className="text-primary font-bold">{filteredProducts.length}</span> منتج
+            <span className="text-primary font-bold">{sortedProducts.length}</span> منتج
           </p>
           {(selectedCategory !== 'all' || selectedBrand !== 'all' || searchQuery || priceRange.min !== actualPriceRange.min || priceRange.max !== actualPriceRange.max || sortBy !== 'newest') && (
             <button
@@ -334,7 +339,24 @@ export default function CatalogContent() {
       </div>
 
       {/* Products Grid */}
-      <ProductGrid products={paginatedProducts} />
+      {sortedProducts.length === 0 ? (
+        <EmptyState
+          title="لا توجد منتجات مطابقة"
+          description="حاول تعديل الفلاتر أو البحث عن كلمة أخرى للعثور على المنتجات المناسبة."
+          action={{
+            label: 'مسح الفلاتر',
+            onClick: () => {
+              setSelectedCategory('all');
+              setSelectedBrand('all');
+              setSearchQuery('');
+              setPriceRange(actualPriceRange);
+              setSortBy('newest');
+            },
+          }}
+        />
+      ) : (
+        <ProductGrid products={paginatedProducts} />
+      )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
@@ -362,7 +384,7 @@ export default function CatalogContent() {
                 من <span className="text-primary font-bold text-lg mx-1">{totalPages}</span>
               </p>
               <p className="text-xs text-text-muted mt-1">
-                عرض {((currentPage - 1) * ITEMS_PER_PAGE) + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} من {filteredProducts.length}
+                عرض {((currentPage - 1) * ITEMS_PER_PAGE) + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, sortedProducts.length)} من {sortedProducts.length}
               </p>
             </div>
 
