@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import ProductCard from '@/components/products/ProductCard';
-import FilterDropdown from '@/components/ui/FilterDropdown';
+import { MobileFilterPills, FilterChip } from '@/components/ui/FilterPills';
 import { Product, Category, Brand } from '@/types';
 import { getDataProvider } from '@/lib/data-providers';
 import { filterProducts, sortProducts } from '@/utils/catalog';
@@ -108,45 +108,68 @@ export default function CatalogContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">المنتجات</h1>
-          <p className="text-neutral-500 text-sm mt-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-white">المنتجات</h1>
+          <p className="text-neutral-500 text-sm mt-0.5">
             {filteredProducts.length} منتج
           </p>
         </div>
+
+        {/* Sort Dropdown - Desktop only */}
+        <div className="hidden md:block">
+          <select
+            value={sortParam}
+            onChange={(e) => updateFilters('sort', e.target.value)}
+            className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-red-500/50 transition-colors"
+          >
+            {sortOptions.map(opt => (
+              <option key={opt.id} value={opt.id} className="bg-neutral-900">
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-2">
-        <FilterDropdown
-          label="الفئة"
-          options={categoryOptions}
-          value={categoryParam}
-          onChange={(v) => updateFilters('category', v)}
-        />
-        {brandOptions.length > 1 && (
-          <FilterDropdown
-            label="الماركة"
+      {/* Category Filter Pills */}
+      {categoryOptions.length > 0 && (
+        <div>
+          <MobileFilterPills
+            options={categoryOptions}
+            selected={categoryParam}
+            onChange={(v) => updateFilters('category', v)}
+          />
+        </div>
+      )}
+
+      {/* Brand Filter Pills */}
+      {brandOptions.length > 1 && (
+        <div>
+          <MobileFilterPills
             options={brandOptions}
-            value={brandParam}
+            selected={brandParam}
             onChange={(v) => updateFilters('brand', v)}
           />
-        )}
-        <FilterDropdown
-          label="الترتيب"
+        </div>
+      )}
+
+      {/* Sort Pills - Mobile only */}
+      <div className="md:hidden">
+        <MobileFilterPills
           options={sortOptions}
-          value={sortParam}
+          selected={sortParam}
           onChange={(v) => updateFilters('sort', v)}
+          showAll={false}
         />
       </div>
 
       {/* Active Filters */}
       {(categoryParam !== 'all' || brandParam !== 'all') && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-neutral-500 text-sm">الفلاتر:</span>
+        <div className="flex flex-wrap items-center gap-2 py-2">
+          <span className="text-neutral-500 text-xs">الفلاتر النشطة:</span>
           {categoryParam !== 'all' && (
             <FilterChip
               label={categories.find(c => c.id === categoryParam)?.name_ar || categoryParam}
@@ -164,7 +187,7 @@ export default function CatalogContent() {
               router.replace(pathname, { scroll: false });
               setCurrentPage(1);
             }}
-            className="text-red-500 text-sm hover:underline"
+            className="text-red-400 text-xs hover:text-red-300 underline"
           >
             مسح الكل
           </button>
@@ -173,7 +196,7 @@ export default function CatalogContent() {
 
       {/* Products Grid */}
       {paginatedProducts.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
           {paginatedProducts.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -184,11 +207,13 @@ export default function CatalogContent() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+        <div className="pt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       )}
     </div>
   );
@@ -197,19 +222,6 @@ export default function CatalogContent() {
 // =============================================================================
 // Helper Components
 // =============================================================================
-
-function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
-  return (
-    <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-500/10 text-red-500 text-sm rounded-full">
-      {label}
-      <button onClick={onRemove} className="hover:text-red-400">
-        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </span>
-  );
-}
 
 function EmptyState() {
   return (

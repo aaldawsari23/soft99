@@ -50,29 +50,29 @@ export default function ProductDetails({ product, brand, category, relatedProduc
   };
 
   return (
-    <div className="min-h-screen bg-background py-8 md:py-12">
+    <div className="min-h-screen bg-background py-4 md:py-8">
       <div className="container mx-auto px-4">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-text-secondary mb-8 overflow-x-auto whitespace-nowrap pb-2">
-          <Link href="/" className="hover:text-primary transition-colors">الرئيسية</Link>
+        {/* Breadcrumb - Compact */}
+        <nav className="flex items-center gap-1.5 text-xs md:text-sm text-neutral-500 mb-4 md:mb-6 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide">
+          <Link href="/" className="hover:text-red-400 transition-colors">الرئيسية</Link>
           <span className="text-white/20">/</span>
-          <Link href="/catalog" className="hover:text-primary transition-colors">المنتجات</Link>
+          <Link href="/catalog" className="hover:text-red-400 transition-colors">المنتجات</Link>
           {category && (
             <>
               <span className="text-white/20">/</span>
-              <span className="text-text-muted">{category.name_ar}</span>
+              <span className="text-neutral-400">{category.name_ar}</span>
             </>
           )}
           <span className="text-white/20">/</span>
-          <span className="text-white font-medium">{displayName}</span>
+          <span className="text-white font-medium truncate max-w-[120px]">{displayName}</span>
         </nav>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+        {/* Main Content - Compact */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
           {/* Image Gallery Section */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Main Image */}
-            <div className="relative aspect-square bg-white/5 rounded-3xl overflow-hidden border border-white/10 group">
+            <div className="relative aspect-square bg-white/5 rounded-2xl overflow-hidden border border-white/10 group">
               {allImages.length > 0 ? (
                 <Image
                   src={allImages[selectedImageIndex]}
@@ -120,75 +120,76 @@ export default function ProductDetails({ product, brand, category, relatedProduc
 
           {/* Product Info Section */}
           <div className="flex flex-col">
-            <div className="mb-6">
+            <div className="mb-4 md:mb-6">
               {/* Badges */}
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {brand && (
-                  <span className="px-3 py-1 bg-white/5 border border-white/10 text-text-secondary text-xs rounded-full">
+                  <span className="px-2.5 py-1 bg-white/5 border border-white/10 text-neutral-400 text-xs rounded-lg">
                     {brand.name}
                   </span>
                 )}
                 {product.is_new && (
-                  <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold rounded-full shadow-lg shadow-orange-500/20">
+                  <span className="px-2.5 py-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold rounded-lg">
                     جديد
                   </span>
                 )}
                 {isAvailable ? (
-                  <span className="px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 text-xs font-medium rounded-full">
+                  <span className="px-2.5 py-1 bg-green-500/10 text-green-400 border border-green-500/20 text-xs font-medium rounded-lg">
                     متوفر
                   </span>
                 ) : (
-                  <span className="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-medium rounded-full">
+                  <span className="px-2.5 py-1 bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-medium rounded-lg">
                     غير متوفر
                   </span>
                 )}
               </div>
 
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+              {/* Title */}
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4 leading-tight">
                 {displayName}
               </h1>
 
               {/* Price */}
               {product.price > 0 && (
-                <div className="flex items-baseline gap-2 mb-6">
-                  <span className="text-4xl font-bold text-primary">
+                <div className="flex items-baseline gap-2 mb-4 md:mb-6">
+                  <span className="text-3xl md:text-4xl font-bold text-red-400">
                     {product.price.toLocaleString('ar-SA')}
                   </span>
-                  <span className="text-xl text-text-muted">{product.currency}</span>
+                  <span className="text-lg md:text-xl text-neutral-500">{product.currency}</span>
                 </div>
               )}
 
               {/* Description */}
               {product.description && (
-                <div className="prose prose-invert max-w-none mb-8 text-text-secondary leading-relaxed bg-white/5 p-6 rounded-2xl border border-white/5">
+                <div className="prose prose-invert max-w-none mb-6 text-neutral-400 leading-relaxed bg-white/5 p-4 md:p-5 rounded-xl border border-white/5 text-sm md:text-base">
                   <p>{product.description}</p>
                 </div>
               )}
 
               {/* Specifications */}
               {((product.specs && Object.keys(product.specs).length > 0) || product.specifications) && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <span className="w-1 h-6 bg-primary rounded-full"></span>
+                <div className="mb-6">
+                  <h3 className="text-base md:text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span className="w-1 h-5 bg-red-500 rounded-full"></span>
                     المواصفات
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {product.specifications?.model && (
-                      <div className="flex justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                        <span className="text-text-muted text-sm">الموديل</span>
-                        <span className="text-white font-medium">{product.specifications.model}</span>
+                      <div className="flex justify-between p-2.5 md:p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span className="text-neutral-500 text-xs md:text-sm">الموديل</span>
+                        <span className="text-white font-medium text-xs md:text-sm">{product.specifications.model}</span>
                       </div>
                     )}
                     {product.specifications?.specification && (
-                      <div className="flex justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                        <span className="text-text-muted text-sm">المواصفة</span>
-                        <span className="text-white font-medium">{product.specifications.specification}</span>
+                      <div className="flex justify-between p-2.5 md:p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span className="text-neutral-500 text-xs md:text-sm">المواصفة</span>
+                        <span className="text-white font-medium text-xs md:text-sm">{product.specifications.specification}</span>
                       </div>
                     )}
                     {product.specs && Object.entries(product.specs).map(([key, value]) => (
-                      <div key={key} className="flex justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                        <span className="text-text-muted text-sm">{key}</span>
-                        <span className="text-white font-medium">{value}</span>
+                      <div key={key} className="flex justify-between p-2.5 md:p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span className="text-neutral-500 text-xs md:text-sm">{key}</span>
+                        <span className="text-white font-medium text-xs md:text-sm">{value}</span>
                       </div>
                     ))}
                   </div>
@@ -197,12 +198,12 @@ export default function ProductDetails({ product, brand, category, relatedProduc
             </div>
 
             {/* Actions Footer (Sticky on Mobile) */}
-            <div className="mt-auto sticky bottom-0 z-20 bg-background/80 backdrop-blur-xl p-4 -mx-4 border-t border-white/10 lg:static lg:bg-transparent lg:p-0 lg:border-0">
-              <div className="flex flex-col sm:flex-row gap-4">
+            <div className="mt-auto sticky bottom-16 md:bottom-0 z-20 bg-neutral-950/95 backdrop-blur-xl p-3 md:p-4 -mx-4 border-t border-white/10 lg:static lg:bg-transparent lg:p-0 lg:border-0">
+              <div className="flex flex-col sm:flex-row gap-3">
                 {isMotorcycle ? (
                   <button
                     onClick={handleBuyNow}
-                    className="flex-1 btn-primary py-4 text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 transition-all"
+                    className="flex-1 px-6 py-3.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-500/20 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all text-sm md:text-base"
                   >
                     {product.salla_url ? 'شراء الآن عبر سلة' : 'تواصل عبر واتساب'}
                   </button>
@@ -211,14 +212,14 @@ export default function ProductDetails({ product, brand, category, relatedProduc
                     <div className="flex items-center bg-white/5 rounded-xl border border-white/10 p-1">
                       <button
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="w-12 h-12 flex items-center justify-center text-xl hover:bg-white/10 rounded-lg transition-colors"
+                        className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl hover:bg-white/10 rounded-lg transition-colors"
                       >
                         -
                       </button>
-                      <span className="w-12 text-center font-bold text-lg">{quantity}</span>
+                      <span className="w-10 md:w-12 text-center font-bold text-base md:text-lg">{quantity}</span>
                       <button
                         onClick={() => setQuantity(quantity + 1)}
-                        className="w-12 h-12 flex items-center justify-center text-xl hover:bg-white/10 rounded-lg transition-colors"
+                        className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl hover:bg-white/10 rounded-lg transition-colors"
                       >
                         +
                       </button>
@@ -226,13 +227,13 @@ export default function ProductDetails({ product, brand, category, relatedProduc
                     <button
                       onClick={handleAddToCart}
                       disabled={isInCart(product.id)}
-                      className="flex-1 btn-primary py-4 text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none"
+                      className="flex-1 px-6 py-3.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-500/20 hover:shadow-red-500/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none text-sm md:text-base"
                     >
                       {isInCart(product.id) ? '✓ في السلة' : 'إضافة للسلة'}
                     </button>
                   </>
                 ) : (
-                  <button disabled className="w-full py-4 bg-white/5 text-text-muted rounded-xl font-bold cursor-not-allowed border border-white/5">
+                  <button disabled className="w-full py-3.5 bg-white/5 text-neutral-500 rounded-xl font-bold cursor-not-allowed border border-white/5 text-sm md:text-base">
                     غير متوفر حالياً
                   </button>
                 )}
@@ -243,9 +244,9 @@ export default function ProductDetails({ product, brand, category, relatedProduc
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-20 pt-10 border-t border-white/5">
-            <h2 className="text-2xl font-bold text-white mb-8">منتجات قد تعجبك</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
+          <div className="mt-12 md:mt-16 pt-8 md:pt-10 border-t border-white/5">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">منتجات قد تعجبك</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
               {relatedProducts.map(p => (
                 <Link
                   key={p.id}
