@@ -102,7 +102,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="'(-+ 9F EF*,..."
+              placeholder="ابحث عن منتج..."
               className="flex-1 bg-transparent text-white placeholder-neutral-500 outline-none"
             />
             <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-neutral-500 bg-neutral-800 rounded">
@@ -143,7 +143,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         {product.name_ar || product.name}
                       </div>
                       <div className="text-sm text-neutral-500">
-                        {product.price > 0 && `${product.price} 1.3`}
+                        {product.price > 0 && `${product.price} ر.س`}
                       </div>
                     </div>
                     <svg className="w-4 h-4 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,11 +154,11 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               </div>
             ) : query.trim() ? (
               <div className="p-8 text-center text-neutral-500">
-                D' *H,/ F*'&, D@ "{query}"
+                لا توجد نتائج لـ &quot;{query}&quot;
               </div>
             ) : (
               <div className="p-6 text-center text-neutral-500 text-sm">
-                '(/# 'DC*'() DD(-+ 9F 'DEF*,'*
+                ابدأ الكتابة للبحث عن المنتجات
               </div>
             )}
           </div>
@@ -167,13 +167,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           {results.length > 0 && (
             <div className="px-4 py-2 border-t border-white/5 text-xs text-neutral-600 flex items-center gap-4">
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded">�</kbd>
-                <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded">�</kbd>
-                DD*FBD
+                <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded">↑</kbd>
+                <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded">↓</kbd>
+                للتنقل
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded">Enter</kbd>
-                DDA*-
+                للفتح
               </span>
             </div>
           )}

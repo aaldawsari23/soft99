@@ -38,7 +38,7 @@ export default function FilterDropdown({ label, options, value, onChange }: Filt
         className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-white/10 rounded-lg text-sm text-white hover:border-white/20 transition-colors"
       >
         <span className="text-neutral-400">{label}:</span>
-        <span>{selectedOption?.label || ''DCD'}</span>
+        <span>{selectedOption?.label || 'الكل'}</span>
         <svg
           className={`w-4 h-4 text-neutral-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
@@ -57,7 +57,7 @@ export default function FilterDropdown({ label, options, value, onChange }: Filt
               value === 'all' ? 'text-red-500 bg-red-500/10' : 'text-neutral-300 hover:bg-white/5'
             }`}
           >
-            'DCD
+            الكل
           </button>
           {options.map(option => (
             <button

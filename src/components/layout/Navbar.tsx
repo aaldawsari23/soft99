@@ -2,115 +2,102 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '@/contexts/CartContext';
+import { STORE } from '@/data/config';
+import SearchModal from '@/components/ui/SearchModal';
 import CartDrawer from '@/components/cart/CartDrawer';
 
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { getTotalItems } = useCart();
   const [mounted, setMounted] = useState(false);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
+
+    // فتح البحث بـ Cmd+K أو Ctrl+K
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+      if (e.key === 'Escape') {
+        setIsSearchOpen(false);
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  // Close mobile menu when clicking outside or pressing Escape
-  useEffect(() => {
-    if (!isMobileMenuOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscapeKey);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isMobileMenuOpen]);
 
   const navLinks = [
     { href: '/', label: 'الرئيسية' },
-    { href: '/catalog', label: 'جميع المنتجات' },
-    { href: '/motorcycles', label: 'دراجات نارية' },
-    { href: '/parking', label: 'مواقف' },
-    { href: '/contact', label: 'تواصل' },
+    { href: '/catalog', label: 'المنتجات' },
+    { href: '/contact', label: 'تواصل معنا' },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <>
+      <nav className="sticky top-0 z-40 h-16 bg-neutral-950/80 backdrop-blur-xl border-b border-white/5">
+        <div className="container mx-auto h-full px-4 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 overflow-hidden rounded-xl border border-white/10 group-hover:border-primary/50 transition-colors">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-white/5 border border-white/10 group-hover:border-red-500/50 transition-colors">
               <Image
                 src="/Logo.png"
-                alt="سوفت 99"
+                alt={STORE.name}
                 fill
                 className="object-cover"
                 priority
               />
             </div>
-            <div className="flex flex-col">
-              <span className="text-white font-bold text-lg leading-none group-hover:text-primary transition-colors">سوفت 99</span>
-              <span className="text-[10px] text-text-muted tracking-wider">SOFT NINETY NINE</span>
-            </div>
+            <span className="text-lg font-bold text-white group-hover:text-red-500 transition-colors">
+              {STORE.name}
+            </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1 bg-white/5 rounded-full px-2 py-1 border border-white/5">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-1.5 text-sm font-medium text-text-secondary hover:text-white hover:bg-white/10 rounded-full transition-all"
+                className="px-4 py-2 text-sm text-neutral-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Google Maps Button */}
-            <a
-              href="https://maps.app.goo.gl/t6pyLPj52d18BaPH6?g_st=ipc"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/5 text-text-secondary hover:bg-primary/20 hover:text-primary transition-all border border-white/5 hover:border-primary/30"
-              aria-label="موقع المحل على الخريطة"
-              title="موقع المحل على الخريطة"
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            {/* Search Button */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="flex items-center justify-center w-10 h-10 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
+              aria-label="بحث"
+              title="بحث (Cmd+K)"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-            </a>
+            </button>
 
             {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 text-text-secondary hover:bg-primary/20 hover:text-primary transition-all border border-white/5 hover:border-primary/30"
-              aria-label="سلة التسوق"
+              className="relative flex items-center justify-center w-10 h-10 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
+              aria-label="السلة"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {mounted && getTotalItems() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold border-2 border-background shadow-lg animate-in zoom-in">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
                   {getTotalItems()}
                 </span>
               )}
@@ -119,10 +106,10 @@ export default function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white/5 text-text-secondary hover:bg-white/10 hover:text-white transition-all border border-white/5"
+              className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
               aria-label="القائمة"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -135,32 +122,24 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div ref={mobileMenuRef} className="md:hidden py-4 border-t border-white/10 space-y-2 animate-in slide-in-from-top-2">
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-neutral-950 border-b border-white/5 py-2 animate-slide-up">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-4 py-3 text-text-secondary hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-6 py-3 text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
               >
                 {link.label}
               </Link>
             ))}
-            <a
-              href="https://maps.app.goo.gl/t6pyLPj52d18BaPH6?g_st=ipc"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-3 text-text-secondary hover:text-white hover:bg-white/5 rounded-xl transition-colors font-medium"
-            >
-              <span>📍</span>
-              <span>موقع المحل على الخريطة</span>
-            </a>
           </div>
         )}
-      </div>
+      </nav>
 
-      {/* Cart Drawer */}
+      {/* Modals */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       {mounted && <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />}
-    </nav>
+    </>
   );
 }
