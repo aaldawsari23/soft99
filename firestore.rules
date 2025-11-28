@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // التحقق من المصادقة
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // التحقق من صلاحية Admin (يتطلب Custom Claims)
+    function isAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.admin == true;
+    }
+    
+    // التحقق من البيانات الصالحة
+    function isValidProduct() {
+      let data = request.resource.data;
+      return data.name_ar is string &&
+             data.price is number &&
+             data.price >= 0;
+    }
+
+    // Products: قراءة للجميع، كتابة للـ Admin فقط
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidProduct();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Categories: قراءة للجميع، كتابة للـ Admin
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Brands: قراءة للجميع، كتابة للـ Admin
+    match /brands/{brandId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders: المستخدم يقرأ طلباته فقط
+    match /orders/{orderId} {
+      allow read: if isAdmin() || 
+                    (isAuthenticated() && resource.data.user_id == request.auth.uid);
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Default: رفض
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

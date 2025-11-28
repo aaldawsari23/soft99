@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Specific directives
+Allow: /catalog
+Allow: /product/*
+Allow: /contact
+Allow: /parking
+Disallow: /admin*
+Disallow: /_next/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://soft99bikes.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
