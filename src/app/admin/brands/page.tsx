@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Brand } from '@/types';
 import { getDataProvider } from '@/lib/data-providers';
 import { useToast } from '@/contexts/ToastContext';
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function AdminBrandsPage() {
   const { showToast } = useToast();
@@ -51,7 +51,7 @@ export default function AdminBrandsPage() {
         setBrands(prev => prev.map(b => b.id === editingBrand.id ? { ...b, ...formData } : b));
         showToast('تم تحديث الماركة بنجاح', 'success');
       } else {
-        const newBrand = await provider.createBrand(formData as any);
+        const newBrand = await provider.createBrand(formData as unknown as Omit<Brand, 'id' | 'created_at'>);
         setBrands(prev => [...prev, newBrand]);
         showToast('تم إضافة الماركة بنجاح', 'success');
       }
@@ -137,7 +137,7 @@ export default function AdminBrandsPage() {
         </div>
       )}
 
-      <ConfirmDialog isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete} title="حذف الماركة" message="هل أنت متأكد من حذف هذه الماركة؟" confirmText="حذف" cancelText="إلغاء" variant="danger" />
+      <ConfirmDialog isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete} title="حذف الماركة" message="هل أنت متأكد من حذف هذه الماركة؟" confirmText="حذف" cancelText="إلغاء" confirmVariant="danger" />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Category } from '@/types';
 import { getDataProvider } from '@/lib/data-providers';
 import { useToast } from '@/contexts/ToastContext';
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function AdminCategoriesPage() {
   const { showToast } = useToast();
@@ -51,7 +51,11 @@ export default function AdminCategoriesPage() {
         setCategories(prev => prev.map(c => c.id === editingCategory.id ? { ...c, ...formData } : c));
         showToast('تم تحديث الفئة بنجاح', 'success');
       } else {
-        const newCategory = await provider.createCategory({ ...formData, order: categories.length } as any);
+        const newCategory = await provider.createCategory({
+          ...formData,
+          order: categories.length,
+          type: 'part' // Default type
+        } as unknown as Omit<Category, 'id' | 'created_at'>);
         setCategories(prev => [...prev, newCategory]);
         showToast('تم إضافة الفئة بنجاح', 'success');
       }
@@ -134,7 +138,7 @@ export default function AdminCategoriesPage() {
         </div>
       )}
 
-      <ConfirmDialog isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete} title="حذف الفئة" message="هل أنت متأكد من حذف هذه الفئة؟" confirmText="حذف" cancelText="إلغاء" variant="danger" />
+      <ConfirmDialog isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete} title="حذف الفئة" message="هل أنت متأكد من حذف هذه الفئة؟" confirmText="حذف" cancelText="إلغاء" confirmVariant="danger" />
     </div>
   );
 }

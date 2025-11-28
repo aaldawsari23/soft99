@@ -13,23 +13,23 @@
  */
 
 import { DataProvider } from './types';
-import { Product, Category, Brand, ProductFilters, Order } from '@/types';
+import { Product, Category, Brand, Order } from '@/types';
 
 export const apiProvider: DataProvider = {
   // --- Products ---
-  async getProducts(_filters?: ProductFilters): Promise<Product[]> {
+  async getProducts(/* filters */): Promise<Product[]> {
     throw new Error('API Provider not implemented');
   },
-  async getProductById(_id: string): Promise<Product | null> {
+  async getProductById(/* id */): Promise<Product | null> {
     throw new Error('API Provider not implemented');
   },
-  async createProduct(_product): Promise<Product> {
+  async createProduct(/* product */): Promise<Product> {
     throw new Error('API Provider not implemented');
   },
-  async updateProduct(_id: string, _product): Promise<Product> {
+  async updateProduct(/* id, product */): Promise<Product> {
     throw new Error('API Provider not implemented');
   },
-  async deleteProduct(_id: string): Promise<boolean> {
+  async deleteProduct(/* id */): Promise<boolean> {
     throw new Error('API Provider not implemented');
   },
 
@@ -37,16 +37,16 @@ export const apiProvider: DataProvider = {
   async getCategories(): Promise<Category[]> {
     throw new Error('API Provider not implemented');
   },
-  async getCategoryById(_id: string): Promise<Category | null> {
+  async getCategoryById(/* id */): Promise<Category | null> {
     throw new Error('API Provider not implemented');
   },
-  async createCategory(_category): Promise<Category> {
+  async createCategory(/* category */): Promise<Category> {
     throw new Error('API Provider not implemented');
   },
-  async updateCategory(_id: string, _category): Promise<Category> {
+  async updateCategory(/* id, category */): Promise<Category> {
     throw new Error('API Provider not implemented');
   },
-  async deleteCategory(_id: string): Promise<boolean> {
+  async deleteCategory(/* id */): Promise<boolean> {
     throw new Error('API Provider not implemented');
   },
 
@@ -54,30 +54,30 @@ export const apiProvider: DataProvider = {
   async getBrands(): Promise<Brand[]> {
     throw new Error('API Provider not implemented');
   },
-  async getBrandById(_id: string): Promise<Brand | null> {
+  async getBrandById(/* id */): Promise<Brand | null> {
     throw new Error('API Provider not implemented');
   },
-  async createBrand(_brand): Promise<Brand> {
+  async createBrand(/* brand */): Promise<Brand> {
     throw new Error('API Provider not implemented');
   },
-  async updateBrand(_id: string, _brand): Promise<Brand> {
+  async updateBrand(/* id, brand */): Promise<Brand> {
     throw new Error('API Provider not implemented');
   },
-  async deleteBrand(_id: string): Promise<boolean> {
+  async deleteBrand(/* id */): Promise<boolean> {
     throw new Error('API Provider not implemented');
   },
 
   // --- Orders ---
-  async getOrders(_userId?: string): Promise<Order[]> {
+  async getOrders(/* userId */): Promise<Order[]> {
     throw new Error('API Provider not implemented');
   },
-  async getOrderById(_id: string): Promise<Order | null> {
+  async getOrderById(/* id */): Promise<Order | null> {
     throw new Error('API Provider not implemented');
   },
-  async createOrder(_order): Promise<Order> {
+  async createOrder(/* order */): Promise<Order> {
     throw new Error('API Provider not implemented');
   },
-  async updateOrder(_id: string, _order): Promise<Order> {
+  async updateOrder(/* id, order */): Promise<Order> {
     throw new Error('API Provider not implemented');
   }
 };

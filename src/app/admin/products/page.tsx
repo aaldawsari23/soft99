@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Product, Category } from '@/types';
 import { getDataProvider } from '@/lib/data-providers';
 import { useToast } from '@/contexts/ToastContext';
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function AdminProductsPage() {
   const { showToast } = useToast();
@@ -218,8 +218,8 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex px-2 py-1 rounded-full text-xs ${product.status === 'published'
-                          ? 'bg-green-500/10 text-green-500'
-                          : 'bg-yellow-500/10 text-yellow-500'
+                        ? 'bg-green-500/10 text-green-500'
+                        : 'bg-yellow-500/10 text-yellow-500'
                         }`}>
                         {product.status === 'published' ? 'منشور' : 'مسودة'}
                       </span>
@@ -287,7 +287,7 @@ export default function AdminProductsPage() {
         message="هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء."
         confirmText={isDeleting ? 'جاري الحذف...' : 'حذف'}
         cancelText="إلغاء"
-        variant="danger"
+        confirmVariant="danger"
       />
     </div>
   );

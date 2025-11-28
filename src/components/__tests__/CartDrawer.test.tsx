@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import CartDrawer from '../cart/CartDrawer'
-import { CartProvider, useCart } from '@/contexts/CartContext'
+import { CartProvider } from '@/contexts/CartContext'
 
 // Mock window.open
 const mockWindowOpen = jest.fn()
@@ -30,7 +30,7 @@ describe('CartDrawer - WhatsApp Order Tests', () => {
   it('should show empty cart message when no items', () => {
     render(
       <CartProvider>
-        <CartDrawer isOpen={true} onClose={() => {}} />
+        <CartDrawer isOpen={true} onClose={() => { }} />
       </CartProvider>
     )
 
@@ -40,7 +40,7 @@ describe('CartDrawer - WhatsApp Order Tests', () => {
   it('should not show WhatsApp button when cart is empty', () => {
     render(
       <CartProvider>
-        <CartDrawer isOpen={true} onClose={() => {}} />
+        <CartDrawer isOpen={true} onClose={() => { }} />
       </CartProvider>
     )
 
@@ -65,7 +65,7 @@ describe('CartDrawer - WhatsApp Order Tests', () => {
   it('should display cart header', () => {
     render(
       <CartProvider>
-        <CartDrawer isOpen={true} onClose={() => {}} />
+        <CartDrawer isOpen={true} onClose={() => { }} />
       </CartProvider>
     )
 

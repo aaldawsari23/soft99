@@ -11,7 +11,6 @@ import { Product } from '@/types';
 export default function EditProductPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
-  const dataProvider = getDataProvider();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +19,7 @@ export default function EditProductPage() {
   useEffect(() => {
     async function loadProduct() {
       try {
+        const dataProvider = getDataProvider();
         const found = await dataProvider.getProductById(id);
         if (!found) {
           setError('لم يتم العثور على المنتج');
@@ -34,12 +34,7 @@ export default function EditProductPage() {
       }
     }
     loadProduct();
-  }, [dataProvider, id]);
-
-  const handleSubmit = async (productData: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => {
-    await dataProvider.updateProduct(id, productData);
-    router.push('/admin/products');
-  };
+  }, [id]);
 
   if (isLoading) {
     return (
@@ -84,12 +79,7 @@ export default function EditProductPage() {
         </Link>
       </div>
 
-      <ProductForm
-        mode="edit"
-        initialData={product}
-        onSubmit={handleSubmit}
-        onCancel={() => router.push('/admin/products')}
-      />
+      <ProductForm initialData={product} />
     </div>
   );
 }
