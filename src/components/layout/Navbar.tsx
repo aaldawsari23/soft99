@@ -80,7 +80,7 @@ export default function Navbar() {
               onClick={() => setIsSearchOpen(true)}
               className="flex items-center justify-center w-10 h-10 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
               aria-label="بحث"
-              title="بحث (Ctrl+K)"
+              title="بحث (Cmd+K)"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -122,7 +122,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-neutral-950 border-b border-white/5 py-2">
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-neutral-950 border-b border-white/5 py-2 animate-slide-up">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

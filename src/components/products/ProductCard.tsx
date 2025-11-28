@@ -51,10 +51,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Quick Add Button */}
           <button
             onClick={handleAddToCart}
-            className={`absolute bottom-2 left-2 w-9 h-9 rounded-lg flex items-center justify-center transition-all ${inCart
+            className={`absolute bottom-2 left-2 w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+              inCart
                 ? 'bg-green-500 text-white'
                 : 'bg-white/90 text-neutral-900 opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white'
-              }`}
+            }`}
             aria-label={inCart ? 'في السلة' : 'إضافة للسلة'}
           >
             {inCart ? (
