@@ -3,7 +3,7 @@
  */
 export type ProductType = 'bike' | 'part' | 'gear';
 export type StockStatus = 'available' | 'unavailable';
-export type ProductStatus = 'published' | 'hidden';
+export type ProductStatus = 'published' | 'hidden' | 'draft';
 
 export interface Product {
   id: string;
@@ -15,12 +15,14 @@ export interface Product {
   brand_id?: string;
   type: ProductType;
   price: number;
+  cost_price?: number;
   currency: string;
   is_new?: boolean;
   is_featured?: boolean;
   is_available?: boolean;
   stock_status?: StockStatus;
   stock_quantity?: number;
+  stock?: number; // Alias for stock_quantity
   status?: ProductStatus;
   specs?: Record<string, string>; // Legacy - use specifications
   specifications?: Record<string, string>;
@@ -41,6 +43,7 @@ export interface Category {
   id: string;
   name_ar: string;
   name_en?: string;
+  name?: string; // Alias
   type: ProductType;
   icon?: string;
   description?: string;
@@ -56,6 +59,7 @@ export interface Brand {
   name_ar?: string;
   name_en?: string;
   logo_url?: string;
+  logo?: string; // Alias for logo_url
   description?: string;
   created_at: string;
 }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Product, Category, Brand } from '@/types';
 import { getDataProvider } from '@/lib/data-providers';
 import { useToast } from '@/contexts/ToastContext';
+import ImageUploader from './ImageUploader';
 
 interface ProductFormProps {
   initialData?: Product;
@@ -254,11 +255,12 @@ export default function ProductForm({ initialData }: ProductFormProps) {
 
         {currentStep === 'images' && (
           <div className="space-y-5">
-            <div className="text-center py-12 border-2 border-dashed border-white/10 rounded-xl">
-              <div className="text-4xl mb-3">📷</div>
-              <p className="text-neutral-500 mb-2">رفع الصور قريباً</p>
-              <p className="text-neutral-600 text-sm">{formData.images.length} صورة</p>
-            </div>
+            <ImageUploader
+              images={formData.images}
+              onChange={(newImages) => updateField('images', newImages)}
+              productId={initialData?.id}
+            />
+
 
             <div className="flex justify-between pt-4">
               <button onClick={() => setCurrentStep('details')} className="px-6 py-2.5 text-neutral-400 hover:text-white transition-colors">→ السابق</button>

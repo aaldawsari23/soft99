@@ -51,7 +51,7 @@ export default function AdminCategoriesPage() {
         setCategories(prev => prev.map(c => c.id === editingCategory.id ? { ...c, ...formData } : c));
         showToast('تم تحديث الفئة بنجاح', 'success');
       } else {
-        const newCategory = await provider.createCategory({ ...formData, order: categories.length } as Category);
+        const newCategory = await provider.createCategory({ ...formData, order: categories.length } as any);
         setCategories(prev => [...prev, newCategory]);
         showToast('تم إضافة الفئة بنجاح', 'success');
       }
