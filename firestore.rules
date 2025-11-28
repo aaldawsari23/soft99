@@ -7,22 +7,53 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Products: Public read, Admin write
+    // Helper function to check if user is admin
+    // يتحقق من وجود custom claim بـ admin = true
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.admin == true;
+    }
+
+    // Products: Public read, Admin only write
     match /products/{productId} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
     }
 
-    // Categories: Public read, Admin write
+    // Categories: Public read, Admin only write
     match /categories/{categoryId} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
     }
 
-    // Brands: Public read, Admin write
+    // Brands: Public read, Admin only write
     match /brands/{brandId} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Orders: User can read their own orders, Admin can read all
+    // للمستقبل - عند إضافة نظام الطلبات
+    match /orders/{orderId} {
+      allow read: if isAuthenticated() &&
+                    (resource.data.user_id == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Users: Users can read/write their own data, Admin can read all
+    // للمستقبل - عند إضافة نظام المستخدمين
+    match /users/{userId} {
+      allow read: if isAuthenticated() &&
+                    (userId == request.auth.uid || isAdmin());
+      allow create, update: if isAuthenticated() && userId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // Settings: Admin only
+    match /settings/{settingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
     }
 
     // Default deny for all other collections
